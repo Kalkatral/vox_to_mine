@@ -24,31 +24,35 @@ impl JsonSerializer
         }
     }
 
-    pub fn add_box(&mut self, start: (u8, u8, u8), end: (u8, u8, u8))
+    pub fn add_box(&mut self, start: (u32, u32, u32), end: (u32, u32, u32))
     {
         self.string.push_str("{\"name\": \"element\", \"from\": [");
         self.string.push_str(&(start.0).to_string());
         self.string.push_str(", ");
-        self.string.push_str(&(start.1).to_string());
-        self.string.push_str(", ");
         self.string.push_str(&(start.2).to_string());
+        self.string.push_str(", ");
+        self.string.push_str(&(start.1).to_string());
         self.string.push_str("], \"to\": [");
         self.string.push_str(&(end.0).to_string());
         self.string.push_str(", ");
-        self.string.push_str(&(end.1).to_string());
-        self.string.push_str(", ");
         self.string.push_str(&(end.2).to_string());
-        self.string.push_str("], \"faces\": {\"north\": {\"uv\": [0, 0, 16, 16], \"texture\": \"#1\"}}, ");
-        self.string.push_str("{\"south\": {\"uv\": [0, 0, 16, 16], \"texture\": \"#1\"}}, ");
-        self.string.push_str("{\"east\": {\"uv\": [0, 0, 16, 16], \"texture\": \"#1\"}}, ");
-        self.string.push_str("{\"west\": {\"uv\": [0, 0, 16, 16], \"texture\": \"#1\"}}, ");
-        self.string.push_str("{\"up\": {\"uv\": [0, 0, 16, 16], \"texture\": \"#1\"}}, ");
-        self.string.push_str("{\"down\": {\"uv\": [0, 0, 16, 16], \"texture\": \"#1\"}}},\n\t\t");
+        self.string.push_str(", ");
+        self.string.push_str(&(end.1).to_string());
+        self.string.push_str("], \"faces\": {\"north\": {\"uv\": [0, 0, 16, 16], \"texture\": \"#1\"}, ");
+        self.string.push_str("\"south\": {\"uv\": [0, 0, 16, 16], \"texture\": \"#1\"}, ");
+        self.string.push_str("\"east\": {\"uv\": [0, 0, 16, 16], \"texture\": \"#1\"}, ");
+        self.string.push_str("\"west\": {\"uv\": [0, 0, 16, 16], \"texture\": \"#1\"}, ");
+        self.string.push_str("\"up\": {\"uv\": [0, 0, 16, 16], \"texture\": \"#1\"}, ");
+        self.string.push_str("\"down\": {\"uv\": [0, 0, 16, 16], \"texture\": \"#1\"}}},\n\t\t");
     }
 
     pub fn write_file(&mut self, filepath: &str) -> std::io::Result<()>
     {
-        self.string.push_str("]\n}");
+        self.string.pop();
+        self.string.pop();
+        self.string.pop();
+        self.string.pop();
+        self.string.push_str("\n\t]\n}");
 
         let mut file: File = File::create(filepath)?;
         file.write(&self.string.clone().into_bytes())?;
