@@ -1,0 +1,18 @@
+1. for each voxel:
+    //// check the maximum box size going forward ////
+    1.1. increment x until you hit void
+    1.2. store the max x that was hit
+    1.3. increment y
+    1.4. jump to 1.1, also if the max x that was hit was smaller than the previous replace the previous; store the max y that was hit
+    1.5. store the max y that was hit
+    1.6. increment z
+    1.7. jump to 1.3, also if the max y that was hit was smaller than the previous replace the previous; store the max z that was hit
+    1.8. store the max z that was hit
+    ////////////////////////////////////////////////// -> max x, max y, max z
+
+    1.8. store the start of the box (the coords of the current voxel) and the end of the box (the start + max x, max y, max z) in the Boxes object
+
+2. get the best volume box and store it into the JsonSerializer object
+3. set the voxels contained in the best volume box to void (0)
+4. clear the Boxes object
+5. if all voxels are not void (0) jump to 1 otherwise end
