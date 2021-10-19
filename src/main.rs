@@ -6,10 +6,12 @@ use json_serializer::JsonSerializer;
 use voxels::Voxels;
 use box_vector::Boxes;
 use std::env;
+use std::io::{stdout, Write};
 
 fn main()
 {
     let args: Vec<String> = env::args().collect();
+    let mut stdout = stdout();
 
     if args.len() != 3
     {
@@ -24,6 +26,8 @@ fn main()
 
     let mut empty: bool = false;
 
+    print!("0.00%");
+
     while !empty
     {
         for z in 0..voxels.size.2
@@ -32,7 +36,7 @@ fn main()
             {
                 for x in 0..voxels.size.0
                 {
-                    if voxels.get((x, y, z)) == 1
+                    if voxels.get((x, y, z)) != 0
                     {
                         let mut max_x: u32 = voxels.size.0 - 1;
                         let mut max_y: u32 = voxels.size.1 - 1;
@@ -77,7 +81,11 @@ fn main()
         voxels.set_area(best_box.0, best_box.1, 0);
         boxes.clear();
         empty = voxels.is_empty();
+        print!("\r{:.2}%", voxels.completion());
+        stdout.flush().unwrap();
     }
+
+    println!("");
 
     match json.write_file(&args[2])
     {

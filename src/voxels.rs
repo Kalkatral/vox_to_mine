@@ -4,6 +4,7 @@ pub struct Voxels
 {
     voxel_array: Vec<u8>,
     pub size: (u32, u32, u32),
+    pub initial_count: u32,
 }
 
 impl Voxels
@@ -13,7 +14,8 @@ impl Voxels
         Self
         {
             voxel_array: vec![0; (size.0 * size.1 * size.2) as usize],
-            size: size
+            size: size,
+            initial_count: 0,
         }
     }
 
@@ -48,6 +50,7 @@ impl Voxels
         {
             voxels.set((voxel.x as u32, voxel.y as u32, voxel.z as u32), 1);
         }
+        voxels.initial_count = voxels.voxel_count();
         voxels
     }
 
@@ -64,7 +67,7 @@ impl Voxels
         true
     }
 
-    /* pub fn voxel_count(&mut self) -> u32
+    pub fn voxel_count(&self) -> u32
     {
         let mut count: u32 = 0;
         for element in self.voxel_array.iter()
@@ -75,5 +78,10 @@ impl Voxels
             }
         }
         count
-    } */
+    }
+
+    pub fn completion(&self) -> f32
+    {
+        (1f32 - (self.voxel_count() as f32) / (self.initial_count as f32)) * 100f32
+    }
 }
