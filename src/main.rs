@@ -5,13 +5,19 @@ mod box_vector;
 use json_serializer::JsonSerializer;
 use voxels::Voxels;
 use box_vector::Boxes;
-
-const LOAD_FILE_PATH: &str = "D:\\Docs\\Desktop\\Mess\\cup.vox";
-const SAVE_FILE_PATH: &str = "D:\\Docs\\Desktop\\Mess\\cup.json";
+use std::env;
 
 fn main()
 {
-    let data: dot_vox::DotVoxData = dot_vox::load(LOAD_FILE_PATH).expect("Failed to load .vox");
+    let args: Vec<String> = env::args().collect();
+
+    if args.len() != 3
+    {
+        println!("Syntax : vox_to_mine <source.vox> <target.json>");
+        return;
+    }
+
+    let data: dot_vox::DotVoxData = dot_vox::load(&args[1]).expect("Failed to load .vox");
     let mut voxels: Voxels = Voxels::from_vox(data);
     let mut boxes: Boxes = Boxes::new();
     let mut json: JsonSerializer = JsonSerializer::new("item/test", (16, 16));
@@ -73,15 +79,15 @@ fn main()
         empty = voxels.is_empty();
     }
 
-    match json.write_file(SAVE_FILE_PATH)
+    match json.write_file(&args[2])
     {
         Ok(()) =>
         {
-            println!("Successfully saved json to {}", SAVE_FILE_PATH);
+            println!("Successfully saved json to {}", &args[2]);
         }
         Err(e) =>
         {
-            println!("Could not save json :\n{}", e);
+            println!("Could not save json :\n\n{}", e);
         }
     }
 }
